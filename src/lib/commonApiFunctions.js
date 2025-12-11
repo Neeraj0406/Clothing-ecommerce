@@ -18,11 +18,15 @@ export const allRoles = [
   {id : 4 , name : 'superadmin'}
 ]
 
+export const getRoleNameFromRoleValue = (roleId) =>{
+  return allRoles.find((role) => role.id == roleId)?.name || ""
+}
+
 export function apiHandler(fn) {
   return async function (request) {
     try {
       return await fn(request);
-    } catch (error) {
+    } catch (error) { 
       console.error("API Handler Error:", error);
       
       const status = error.status || 500;
