@@ -12,21 +12,25 @@ export const throwError = (message, code = 400) => {
 };
 
 export const allRoles = [
-  {id : 1 , name : 'customer'},
-  {id : 2 , name : 'merchant'},
-  {id : 3 , name : 'admin'},
-  {id : 4 , name : 'superadmin'}
+  {id : 1, name : 'customer'},
+  {id : 2, name : 'merchant'},
+  {id : 3, name : 'admin'},
+  {id : 4, name : 'superadmin'}
 ]
 
 export const getRoleNameFromRoleValue = (roleId) =>{
   return allRoles.find((role) => role.id == roleId)?.name || ""
 }
 
+export const getRoleValueFromRoleName = (roleName) =>{
+  return allRoles.find((role) => role.name == roleName)?.id || ""
+} 
+
 export function apiHandler(fn) {
-  return async function (request) {
+  return async function (request, context) {
     try {
-      return await fn(request);
-    } catch (error) { 
+      return await fn(request, context);
+    } catch (error) {   
       console.error("API Handler Error:", error);
       
       const status = error.status || 500;
@@ -43,6 +47,9 @@ export function apiHandler(fn) {
   };
 }
 
+export const createHashPassword = async(password) =>{
+      return await bcrypt.hash(password, 10);
+}
 
 // User creation function
 export async function createUser(data, role) {
