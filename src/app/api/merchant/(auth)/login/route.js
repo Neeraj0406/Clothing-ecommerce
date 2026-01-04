@@ -4,7 +4,7 @@ import { NextResponse } from "next/server";
 export const POST = apiHandler( async(request) =>{
     const body = await request.json()
     const {email, password} = body
-    const user = await loginUser({email ,password} , 3)
+    const user = await loginUser({email ,password} , 2)
 
      return NextResponse.json(
         { 

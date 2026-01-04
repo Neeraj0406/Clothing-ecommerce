@@ -31,7 +31,6 @@ export function apiHandler(fn) {
     try {
       return await fn(request, context);
     } catch (error) {   
-      console.error("API Handler Error:", error);
       
       const status = error.status || 500;
       const message = error.message
@@ -133,6 +132,10 @@ export const loginUser = async(data , role)=>{
 
   if(!user.is_active ){
     throwError("Your account has been suspended")
+  }
+
+  if(user.role == 2 && !user.verified_merchant ){
+    throwError("Your request has been sent. Please wait until your request dont approved")
   }
 
   

@@ -3,16 +3,15 @@ import pool from "@/lib/db"
 import { withAuth } from "@/lib/withAuth"
 import { NextResponse } from "next/server"
 
-async function createMerchant(request) {
+async function registerMerchant(request) {
 
     const { name, email, password, phone, address, company_name, company_number, company_address } = await request.json()
-
     const role = getRoleValueFromRoleName("merchant")
     const hashedPassword = await createHashPassword(password)   
 
     const userResult = await pool.query(
-        `INSERT INTO users (name, email, password, phone, address, role, created_at, updated_at, isverified, verified_merchant) 
-       VALUES ($1, $2, $3, $4, $5, $6, NOW(), NOW(), true, true) 
+        `INSERT INTO users (name, email, password, phone, address, role, created_at, updated_at, isverified) 
+       VALUES ($1, $2, $3, $4, $5, $6, NOW(), NOW(), true) 
        RETURNING id, name, email, phone, address, role, created_at`,
         [name, email, hashedPassword, phone, address, role]
     );
@@ -33,4 +32,4 @@ async function createMerchant(request) {
 }
 
 
-export const POST = withAuth(apiHandler(createMerchant), ["superadmin", 'admin'])
+export const POST = apiHandler(registerMerchant)
