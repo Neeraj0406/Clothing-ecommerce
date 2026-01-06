@@ -22,13 +22,15 @@ export const withAuth = (handler, allowedRoles = []) => {
     let user;
     try {
       user = jwt.verify(token, process.env.JWT_SECRET);
-    } catch {
+    } catch(error) {
+      console.log("error",error);
+      
       return NextResponse.json(
         { message: "Invalid token" },
         { status: 401 }
       );
     }
-
+    console.log("userss",user)
     if (
       allowedRoles.length &&
       !allowedRoles.includes(getRoleNameFromRoleValue(user.role))

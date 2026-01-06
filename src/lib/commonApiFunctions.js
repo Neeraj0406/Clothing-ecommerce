@@ -106,7 +106,7 @@ export async function createUser(data, role) {
 }
 
 
-export const loginUser = async(data , role)=>{
+export const loginUser = async(data , role=[])=>{
   const {email, password} = data
 
   if(!role){
@@ -121,11 +121,12 @@ export const loginUser = async(data , role)=>{
   }
 
   const foundUser = await pool.query(
-    `Select * from users where email=$1 And role=$2`, [email, role]
+    `Select * from users where email=$1 And role= Any($2)`, [email, role]
   )
 
   const user = foundUser.rows[0]
-
+  console.log("user",user);
+  
   if(!user){
     throwError("Invalid credentails", 400)
   }
@@ -144,7 +145,7 @@ export const loginUser = async(data , role)=>{
 
   const tokenPayload = {
     id : user.id,
-    role : role
+    role : user.role
   }
 
   const token = await jwt.sign(tokenPayload, process.env.JWT_SECRET,{
